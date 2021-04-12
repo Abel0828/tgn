@@ -115,20 +115,19 @@ def get_data(dataset_name, different_new_nodes_between_val_and_test=False, rando
     new_node_val_mask = np.logical_and(val_mask, edge_contains_new_val_node_mask)
     new_node_test_mask = np.logical_and(test_mask, edge_contains_new_test_node_mask)
 
-    edge_contains_new_new_test_node_mask = np.array(
-      [(a in test_new_node_set and b in test_new_node_set) for a, b in zip(sources, destinations)])
-    new_new_node_test_mask = np.logical_and(test_mask, edge_contains_new_new_test_node_mask)
-
-    edge_contains_new_old_test_node_mask = np.array(
-      [(bool(int(a in test_new_node_set) + int(b in test_new_node_set)) == 1) for a, b in zip(sources, destinations)])
-    new_old_node_test_mask = np.logical_and(test_mask, edge_contains_new_old_test_node_mask)
-
 
   else:
     edge_contains_new_node_mask = np.array(
       [(a in new_node_set or b in new_node_set) for a, b in zip(sources, destinations)])
     new_node_val_mask = np.logical_and(val_mask, edge_contains_new_node_mask)
     new_node_test_mask = np.logical_and(test_mask, edge_contains_new_node_mask)
+    edge_contains_new_new_test_node_mask = np.array(
+      [(a in new_node_set and b in new_node_set) for a, b in zip(sources, destinations)])
+    new_new_node_test_mask = np.logical_and(test_mask, edge_contains_new_new_test_node_mask)
+
+    edge_contains_new_old_test_node_mask = np.array(
+      [(bool(int(a in new_node_set) + int(b in new_node_set)) == 1) for a, b in zip(sources, destinations)])
+    new_old_node_test_mask = np.logical_and(test_mask, edge_contains_new_old_test_node_mask)
 
   # validation and test with all edges
   val_data = Data(sources[val_mask], destinations[val_mask], timestamps[val_mask],
