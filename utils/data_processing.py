@@ -126,7 +126,7 @@ def get_data(dataset_name, different_new_nodes_between_val_and_test=False, rando
     new_new_node_test_mask = np.logical_and(test_mask, edge_contains_new_new_test_node_mask)
 
     edge_contains_new_old_test_node_mask = np.array(
-      [(bool(int(a in new_node_set) + int(b in new_node_set)) == 1) for a, b in zip(sources, destinations)])
+      [bool(int(a in new_node_set) + int(b in new_node_set) == 1) for a, b in zip(sources, destinations)])
     new_old_node_test_mask = np.logical_and(test_mask, edge_contains_new_old_test_node_mask)
 
   # validation and test with all edges
