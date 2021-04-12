@@ -164,6 +164,10 @@ def get_data(dataset_name, different_new_nodes_between_val_and_test=False, rando
     new_node_val_data.n_interactions, new_node_val_data.n_unique_nodes))
   print("The new node test dataset has {} interactions, involving {} different nodes".format(
     new_node_test_data.n_interactions, new_node_test_data.n_unique_nodes))
+  print("The new-new node test dataset has {} interactions, involving {} different nodes".format(
+    new_new_node_test_data.n_interactions, new_new_node_test_data.n_unique_nodes))
+  print("The new-old node test dataset has {} interactions, involving {} different nodes".format(
+    new_old_node_test_data.n_interactions, new_old_node_test_data.n_unique_nodes))
   print("{} nodes were used for the inductive testing, i.e. are never seen during training".format(
     len(new_test_node_set)))
 
