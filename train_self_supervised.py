@@ -323,11 +323,15 @@ for i in range(args.n_runs):
                                                                           data=new_node_test_data,
                                                                           n_neighbors=NUM_NEIGHBORS)
 
+  if USE_MEMORY:
+    tgn.memory.restore_memory(val_memory_backup)
+
   new_new_test_ap, new_new_test_auc = eval_edge_prediction(model=tgn,
                                                  negative_edge_sampler=nn_test_rand_sampler,
                                                  data=new_new_node_test_data,
                                                  n_neighbors=NUM_NEIGHBORS)
-
+  if USE_MEMORY:
+    tgn.memory.restore_memory(val_memory_backup)
   new_old_test_ap, new_old_test_auc = eval_edge_prediction(model=tgn,
                                                            negative_edge_sampler=nn_test_rand_sampler,
                                                            data=new_old_node_test_data,
