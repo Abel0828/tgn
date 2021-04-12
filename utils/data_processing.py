@@ -115,6 +115,14 @@ def get_data(dataset_name, different_new_nodes_between_val_and_test=False, rando
     new_node_val_mask = np.logical_and(val_mask, edge_contains_new_val_node_mask)
     new_node_test_mask = np.logical_and(test_mask, edge_contains_new_test_node_mask)
 
+    edge_contains_new_new_test_node_mask = np.array(
+      [(a in test_new_node_set and b in test_new_node_set) for a, b in zip(sources, destinations)])
+    new_new_node_test_mask = np.logical_and(test_mask, edge_contains_new_new_test_node_mask)
+
+    edge_contains_new_old_test_node_mask = np.array(
+      [(bool(int(a in test_new_node_set) + int(b in test_new_node_set)) == 1) for a, b in zip(sources, destinations)])
+    new_old_node_test_mask = np.logical_and(test_mask, edge_contains_new_old_test_node_mask)
+
 
   else:
     edge_contains_new_node_mask = np.array(
@@ -138,6 +146,13 @@ def get_data(dataset_name, different_new_nodes_between_val_and_test=False, rando
                             timestamps[new_node_test_mask], edge_idxs[new_node_test_mask],
                             labels[new_node_test_mask])
 
+  new_new_node_test_data = Data(sources[new_new_node_test_mask], destinations[new_new_node_test_mask],
+                            timestamps[new_new_node_test_mask], edge_idxs[new_new_node_test_mask],
+                            labels[new_new_node_test_mask])
+  new_old_node_test_data = Data(sources[new_old_node_test_mask], destinations[new_old_node_test_mask],
+                            timestamps[new_old_node_test_mask], edge_idxs[new_old_node_test_mask],
+                            labels[new_old_node_test_mask])
+
   print("The dataset has {} interactions, involving {} different nodes".format(full_data.n_interactions,
                                                                       full_data.n_unique_nodes))
   print("The training dataset has {} interactions, involving {} different nodes".format(
@@ -154,7 +169,7 @@ def get_data(dataset_name, different_new_nodes_between_val_and_test=False, rando
     len(new_test_node_set)))
 
   return node_features, edge_features, full_data, train_data, val_data, test_data, \
-         new_node_val_data, new_node_test_data
+         new_node_val_data, new_node_test_data, new_new_node_test_data, new_old_node_test_data
 
 
 def compute_time_statistics(sources, destinations, timestamps):

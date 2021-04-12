@@ -110,7 +110,7 @@ logger.info(args)
 
 ### Extract data for training, validation and testing
 node_features, edge_features, full_data, train_data, val_data, test_data, new_node_val_data, \
-new_node_test_data = get_data(DATA,
+new_node_test_data, new_new_node_test_data, new_old_node_test_data = get_data(DATA,
                               different_new_nodes_between_val_and_test=args.different_new_nodes, randomize_features=args.randomize_features)
 
 # Initialize training neighbor finder to retrieve temporal graph
@@ -323,16 +323,32 @@ for i in range(args.n_runs):
                                                                           data=new_node_test_data,
                                                                           n_neighbors=NUM_NEIGHBORS)
 
+  new_new_test_ap, new_new_test_auc = eval_edge_prediction(model=tgn,
+                                                 negative_edge_sampler=nn_test_rand_sampler,
+                                                 data=new_new_node_test_data,
+                                                 n_neighbors=NUM_NEIGHBORS)
+
+  new_old_test_ap, new_old_test_auc = eval_edge_prediction(model=tgn,
+                                                           negative_edge_sampler=nn_test_rand_sampler,
+                                                           data=new_old_node_test_data,
+                                                           n_neighbors=NUM_NEIGHBORS)
+
   logger.info(
     'Test statistics: Old nodes -- auc: {}, ap: {}'.format(test_auc, test_ap))
   logger.info(
     'Test statistics: New nodes -- auc: {}, ap: {}'.format(nn_test_auc, nn_test_ap))
+  logger.info(
+      'Test statistics: New-new nodes -- auc: {}, ap: {}'.format(new_new_test_auc, new_new_test_ap))
+  logger.info(
+      'Test statistics: New-old nodes -- auc: {}, ap: {}'.format(new_old_test_auc, new_old_test_ap))
   # Save results for this run
   pickle.dump({
     "val_aps": val_aps,
     "new_nodes_val_aps": new_nodes_val_aps,
     "test_ap": test_ap,
     "new_node_test_ap": nn_test_ap,
+    "new_new_test_ap": new_new_test_ap,
+    "new_old_test_ap": new_old_test_ap,
     "epoch_times": epoch_times,
     "train_losses": train_losses,
     "total_epoch_times": total_epoch_times
